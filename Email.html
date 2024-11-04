@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain Transaction</title>
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+    <!-- Include jsPDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <h1>Complete Your Transaction</h1>
+    <form id="transaction-form">
+        <label for="name">Sender Name:</label>
+        <input type="text" id="name" required><br><br>
+
+        <label for="email">Email Address:</label>
+        <input type="email" id="email" required><br><br>
+
+        <label for="phone">Phone Number:</label>
+        <input type="text" id="phone" required><br><br>
+
+        <label for="amount">Amount (ETH):</label>
+        <input type="text" id="amount" required><br><br>
+
+        <button type="submit">Complete Transaction</button>
+    </form>
+
+    <script>
+        const web3 = new Web3(window.ethereum);
+
+        document.getElementById('transaction-form').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const amount = document.getElementById('amount').value;
+
+            try {
+                const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                const senderAddress = accounts[0];
+
+                // Execute blockchain transaction
+                const transaction = await web3.eth.sendTransaction({
+                    from: senderAddress,
+                    to: '0xRECEIVER_ADDRESS', // Replace with receiver's address
+                    value: web3.utils.toWei(amount, 'ether'),
+                });
+
+                // Transaction details
+                const transactionDetails = {
+                    name,
+                    email,
+                    phone,
+                    amount,
+                    transactionId: transaction.transactionHash,
+                    date: new Date().toLocaleString(),
+                };
+
+                // Generate PDF with transaction details
+                generatePdf(transactionDetails);
+
+                // Send transaction details to the server to send an email
+                const response = await fetch('/send-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(transactionDetails),
+                });
+
+                if (response.ok) {
+                    alert('Transaction successful! Email sent with receipt.');
+                } else {
+                    alert('Failed to send email.');
+                }
+
+            } catch (error) {
+                console.error('Transaction failed:', error);
+                alert('Transaction failed.');
+            }
+        });
+
+        // Function to generate PDF
+        function generatePdf(transactionDetails) {
+            const { name, email, phone, amount, transactionId, date } = transactionDetails;
+
+            // Initialize jsPDF
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Add text to the PDF
+            doc.text(`Transaction Receipt`, 10, 10);
+            doc.text(`Name: ${name}`, 10, 20);
+            doc.text(`Email: ${email}`, 10, 30);
+            doc.text(`Phone: ${phone}`, 10, 40);
+            doc.text(`Amount (ETH): ${amount}`, 10, 50);
+            doc.text(`Transaction ID: ${transactionId}`, 10, 60);
+            doc.text(`Date: ${date}`, 10, 70);
+
+            // Save the PDF locally
+            doc.save('transaction_receipt.pdf');
+        }
+    </script>
+</body>
+</html>

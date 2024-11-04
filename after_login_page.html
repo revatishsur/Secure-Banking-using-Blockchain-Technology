@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Banking System</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            display: flex;
+            height: 100vh;
+            background-color: #00072d;
+        }
+        .left-panel {
+            flex: 1;
+            background-color: #1e296a;
+            color: #ffffff;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .left-panel h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .left-panel p {
+            font-size: 1rem;
+            margin-bottom: 30px;
+            text-align: center;
+            line-height: 1.5;
+        }
+        .left-panel a {
+            display: inline-block;
+            background-color: #ffffff;
+            color: #1e296a;
+            padding: 10px 20px;
+            text-decoration: none;
+            margin: 10px;
+            border-radius: 5px;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .left-panel a:hover {
+            background-color: #ffcc00;
+            transform: scale(1.05);
+        }
+        .right-panel {
+            flex: 1;
+            background-image: url('your-image-path.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        .navbar {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .navbar a {
+            color: #ffffff;
+            text-decoration: none;
+            margin-left: 30px;
+            font-weight: bold;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        .navbar a:hover {
+            color: #ffcc00;
+        }
+        /* Dropdown Container */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        /* Dropdown Menu */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #1e296a;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .dropdown-content a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .dropdown-content a:hover {
+            background-color: #333;
+            transform: scale(1.05);
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .dropdown:hover .dropdown-btn {
+            color: #ffcc00;
+        }
+        /* Profile Modal */
+        #profileModal {
+            display: none;
+            position: fixed;
+            top: 50px;
+            right: 20px;
+            padding: 20px;
+            background-color: #1e296a;
+            color: #ffffff;
+            border-radius: 8px;
+            z-index: 1000;
+        }
+        #profileModal h3 {
+            margin-top: 0;
+        }
+        #profileModal button {
+            background-color: #ffffff;
+            color: #1e296a;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        #profileModal button:hover {
+            background-color: #ffcc00;
+        }
+        /* Transaction History Modal */
+        #historyModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80%;
+            background-color: #ffffff;
+            color: #1e296a;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        #historyModal h3 {
+            text-align: center;
+            margin-top: 0;
+        }
+        #historyModal ul {
+            list-style: none;
+            padding: 0;
+        }
+        #historyModal ul li {
+            margin: 10px 0;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+        #historyModal button {
+            background-color: #1e296a;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        #historyModal button:hover {
+            background-color: #ffcc00;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="left-panel">
+            <h1>Welcome to Secure Banking System</h1>
+            <p>Experience a seamless and secure banking experience with our state-of-the-art system, ensuring your financial transactions are safe, quick, and efficient.</p>
+            <div>
+                <a href="#">Explore</a>
+                <a href="#">Discover</a>
+            </div>
+            
+        </div>
+        <div class="right-panel"></div>
+    </div>
+
+    <div class="navbar">
+        <a href="#">Home</a>
+        <a href="#" onclick="showProfile()">Profile</a>
+        <div class="dropdown">
+            <a href="#" class="dropdown-btn">Transactions</a>
+            <div class="dropdown-content">
+                <a href="http://127.0.0.1:5500/main_secure/testing_blockahin.html">Send Money</a>
+                <a href="#">Receive Money</a>
+            </div>
+        </div>
+        <a href="#" onclick="showTransactionHistory()">History</a>
+        <a href="#">Logout</a>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal">
+        <h3>User Profile</h3>
+        <p id="userName">Name: </p>
+        <p id="userEmail">Email: </p>
+        <button onclick="hideProfile()">Close</button>
+    </div>
+
+    <!-- Transaction History Modal -->
+    <div id="historyModal">
+        <h3>Transaction History</h3>
+        <ul id="transactionList"></ul>
+        <button onclick="hideTransactionHistory()">Close</button>
+    </div>
+
+    <script>
+        // Function to show the profile modal with user information
+        function showProfile() {
+            const name = localStorage.getItem('userName');
+            const email = localStorage.getItem('userEmail');
+            
+            if (name && email) {
+                document.getElementById('userName').innerText = `Name: ${name}`;
+                document.getElementById('userEmail').innerText = `Email: ${email}`;
+                document.getElementById('profileModal').style.display = 'block';
+            } else {
+                alert("No user information found.");
+            }
+        }
+
+        // Function to hide the profile modal
+        function hideProfile() {
+            document.getElementById('profileModal').style.display = 'none';
+        }
+
+        // Function to show the transaction history modal
+        function showTransactionHistory() {
+            fetchTransactionHistory();
+            document.getElementById('historyModal').style.display = 'block';
+        }
+
+        // Function to hide the transaction history modal
+        function hideTransactionHistory() {
+            document.getElementById('historyModal').style.display = 'none';
+        }
+
+        // Function to fetch and display transaction history
+        async function fetchTransactionHistory() {
+            const walletAddress = '0xBD2d3c5032d9Dd0fA3e4C0C0dFe7846339bdAdB4'; // Replace with your wallet address
+            const apiKey = 'DU773MS2RIN7KWHDKCXNC1CH6KE5WQ6EUR'; // Replace with your Etherscan API key
+            const url = `https://api.etherscan.io/api?module=account&action=txlist&address=${walletAddress}&startblock=0&endblock=99999999&sort=asc&apikey=${apiKey}`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                const transactionList = document.getElementById('transactionList');
+                transactionList.innerHTML = '';
+
+                if (data.result.length > 0) {
+                    data.result.forEach(transaction => {
+                        const listItem = document.createElement('li');
+                        listItem.innerText = `Tx Hash: ${transaction.hash}, Block: ${transaction.blockNumber}, From: ${transaction.from}, To: ${transaction.to}`;
+                        transactionList.appendChild(listItem);
+                    });
+                } else {
+                    transactionList.innerHTML = '<li>No transactions found.</li>';
+                }
+            } catch (error) {
+                console.error('Error fetching transaction history:', error);
+            }
+        }
+    </script>
+
+</body>
+</html>
